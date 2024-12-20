@@ -21,6 +21,7 @@ variables:
   stateStorage: 'cmhtfstatesa'
   stateContainer: 'tfstate'
   stateKey: 'terraform.tfstate'
+  resourceGroup: 'rg-tf'
 
 steps:
   - checkout: self
@@ -35,6 +36,7 @@ steps:
     inputs:
       provider: azurerm
       command: init
+      backendAzureRmResourceGroupName: $(resourceGroup)
       backendServiceArm: $(serviceConnection)
       backendAzureRmStorageAccountName: $(stateStorage)
       backendAzureRmContainerName: $(stateContainer)
