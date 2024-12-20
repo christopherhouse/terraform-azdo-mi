@@ -25,7 +25,7 @@ steps:
       terraformVersion: 'latest'
 
   - script: |
-      terraform init -backend-config="storage_account_name=cmhtfstatesa" -backend-config="container_name=state" -backend-config="key=state.tfstate"
+      terraform init
       terraform plan
       terraform apply -auto-approve
     displayName: 'Terraform commands'
