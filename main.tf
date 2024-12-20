@@ -34,3 +34,29 @@ resource "azurerm_storage_share" "ss" {
     storage_account_name = azurerm_storage_account.sa.name
     quota = 50
 }
+
+# Azure Function App with Elastic Premium Plan
+resource "azurerm_app_service_plan" "asp" {
+    name                = "asp-cmhtfwidepl"
+    location            = "eastus2"
+    resource_group_name = data.azurerm_resource_group.rg.name
+    kind                = "elastic"
+    sku {
+        tier = "ElasticPremium"
+        size = "EP1"
+    }
+}
+
+resource "azurerm_function_app" "fa" {
+    name                      = "fa-cmhtfwidepl"
+    location                  = "eastus2"
+    resource_group_name       = data.azurerm_resource_group.rg.name
+    app_service_plan_id       = azurerm_app_service_plan.asp.id
+    storage_account_name      = azurerm_storage_account.sa.name
+    storage_account_access_key = azurerm_storage_account.sa.primary_access_key
+    version                   = "~3"
+    app_settings = {
+        "FUNCTIONS_WORKER_RUNTIME" = "node"
+        "WEBSITE_NODE_DEFAULT_VERSION" = "14"
+    }
+}
