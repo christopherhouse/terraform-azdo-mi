@@ -24,8 +24,15 @@ steps:
     inputs:
       terraformVersion: 'latest'
 
-  - script: |
-      terraform init
-      terraform plan
-      terraform apply -auto-approve
-    displayName: 'Terraform commands'
+  - task: TerraformTaskV4@4
+    displayName: tf init
+    inputs:
+      provider: azurerm
+      command: init
+      backendServiceArm: 'tf-wi-cmh'
+
+  # - script: |
+  #     terraform init
+  #     terraform plan
+  #     terraform apply -auto-approve
+  #   displayName: 'Terraform commands'
