@@ -16,6 +16,12 @@ trigger:
 pool:
   name: tf-mi
 
+variables: 
+  serviceConnection: 'tf-wi-cmh'
+  stateStorage: 'cmhtfstatesa'
+  stateContainer: 'tfstate'
+  stateKey: 'terraform.tfstate'
+
 steps:
   - checkout: self
     persistCredentials: true
@@ -29,7 +35,10 @@ steps:
     inputs:
       provider: azurerm
       command: init
-      backendServiceArm: 'tf-wi-cmh'
+      backendServiceArm: $(serviceConnection)
+      backendAzureRmStorageAccountName: $(stateStorage)
+      backendAzureRmContainerName: $(stateContainer)
+      backendAzureRmKey: $(stateKey)
 
   # - script: |
   #     terraform init
