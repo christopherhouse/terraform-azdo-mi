@@ -34,3 +34,26 @@ resource "azurerm_storage_share" "ss" {
   storage_account_name = azurerm_storage_account.sa.name
   quota                = 50
 }
+
+# Azure Service Bus Standard SKU with a topic named 'orders' and a queue
+# named 'status'
+resource "azurerm_servicebus_namespace" "sb" {
+  name                = "sbcmhtfwidepl"
+  location            = azurerm_storage_account.sa.location
+  resource_group_name = data.azurerm_resource_group.rg.name
+  sku                 = "Standard"
+
+  tags = {
+    environment = "production"
+  }
+}
+
+resource "azurerm_servicebus_topic" "st" {
+  name                = "orders"
+  namespace_id = sb.id
+}
+
+resource "azurerm_servicebus_queue" "sq" {
+  name                = "status"
+  namespace_id = sb.id
+}
