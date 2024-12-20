@@ -1,0 +1,31 @@
+# Create an Azure pipeline with a CI trigger for main branch.
+# The pipeline should run the following terraform commands to deploy
+# the file main.tf, in the root of the repository:
+# - terraform init
+# - terraform plan
+# - terraform apply
+#
+# The pipeline should use an Azure DevOps Service connection named "tf-wi-cmh"
+# and should run on an self-hosted agent pool named "tf-mi"
+
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  name: tf-mi
+
+steps:
+  - checkout: self
+    persistCredentials: true
+
+  - task: TerraformInstaller@0
+    inputs:
+      terraformVersion: 'latest'
+
+  - script: |
+      terraform init -backend-config="storage_account_name=cmhtfstatesa" -backend-config="container_name=state" -backend-config="key=state.tfstate"
+      terraform plan
+      terraform apply -auto-approve
+    displayName: 'Terraform commands'
