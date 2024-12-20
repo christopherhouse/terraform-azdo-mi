@@ -41,6 +41,22 @@ steps:
       backendAzureRmStorageAccountName: $(stateStorage)
       backendAzureRmContainerName: $(stateContainer)
       backendAzureRmKey: $(stateKey)
+  
+  - task: TerraformTaskV4@4
+    displayName: tf plan
+    inputs:
+      provider: azurerm
+      command: plan
+      commandOptions: '-out=main.tfplan'
+      environmentServiceNameAzureRM: $(serviceConnection)
+
+  - task: TerraformTaskV4@4
+    displayName: tf apply
+    inputs:
+      provider: azurerm
+      command: apply
+      commandOptions: '-auto-approve main.tfplan'
+      environmentServiceNameAzureRM: $(serviceConnection)
 
   # - script: |
   #     terraform init
